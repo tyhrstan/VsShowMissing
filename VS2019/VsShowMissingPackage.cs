@@ -185,6 +185,7 @@ namespace Gardiner.VsShowMissing
 
             _gitignores.Clear();
             AddGitIgnoreFromDirectory(_solutionDirectory);
+            AddGlobalGitIgnore();
 
             _filters = new List<Regex>();
 
@@ -279,6 +280,15 @@ namespace Gardiner.VsShowMissing
             if (directory != null && _gitignores.ContainsKey(directory))
             {
                 return _gitignores[directory].IsIgnored(file, false);
+            }
+
+            if (Options.UseGlobalGitIgnore)
+            {
+                string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (_gitignores.ContainsKey(userDirectory))
+                {
+                    return _gitignores[userDirectory].IsIgnored(file, false);
+                }
             }
 
             return false;
@@ -404,6 +414,16 @@ namespace Gardiner.VsShowMissing
         {
             var gitIgnoreFile = Path.Combine(directoryName, ".gitignore");
             if (Options.UseGitIgnore && File.Exists(gitIgnoreFile))
+            {
+                _gitignores.Add(directoryName, new IgnoreList(gitIgnoreFile));
+            }
+        }
+
+        private void AddGlobalGitIgnore()
+        {
+            string directoryName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var gitIgnoreFile = Path.Combine(directoryName, ".gitignore");
+            if (Options.UseGlobalGitIgnore && File.Exists(gitIgnoreFile))
             {
                 _gitignores.Add(directoryName, new IgnoreList(gitIgnoreFile));
             }

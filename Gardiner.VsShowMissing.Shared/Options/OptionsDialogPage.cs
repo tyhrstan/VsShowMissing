@@ -20,6 +20,7 @@ namespace Gardiner.VsShowMissing.Options
     {
         private const string IgnorePhysicalFilesDefault = "*.*proj;*.user;.gitignore;*.ruleset;*.suo;*.licx;*.dotSettings;*.dbmdl;*.jfm";
         private const bool UseGitIgnoreDefault = true;
+        private const bool UseGlobalGitIgnoreDefault = true;
         private const bool NotIncludedFilesDefault = true;
         private const bool FailBuildOnErrorDefault = false;
         private string _ignorePhysicalFiles;
@@ -37,6 +38,12 @@ namespace Gardiner.VsShowMissing.Options
         [Category("Show Missing")]
         [DefaultValue(UseGitIgnoreDefault)]
         public bool UseGitIgnore { get; set; }
+
+        [LocDisplayName("Use global .gitignore also")]
+        [Description("If checked then global .gitignore file is also used for ignoring files")]
+        [Category("Show Missing")]
+        [DefaultValue(UseGlobalGitIgnoreDefault)]
+        public bool UseGlobalGitIgnore { get; set; }
 
         [LocDisplayName("Message importance")]
         [Description("What kind of message to create in the Error List window for each missing file")]
