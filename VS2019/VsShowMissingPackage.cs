@@ -385,27 +385,37 @@ namespace Gardiner.VsShowMissing
                     }
 
                     string directoryName = Path.GetDirectoryName(filePath);
+                    ProcessDirectoryForFiles(projectPhysicalFiles, processedPhysicalDirectories, physicalFileProjectMap, projectFilename, directoryName);
+                }
+            }
+        }
 
-                    // If we haven't seen this directory before, find the files inside it
-                    if (Directory.Exists(directoryName) && processedPhysicalDirectories.Add(directoryName))
-                    {
-                        AddGitIgnoreFromDirectory(directoryName);
+        private void ProcessDirectoryForFiles(ISet<string> projectPhysicalFiles, ISet<string> processedPhysicalDirectories, IDictionary<string, string> physicalFileProjectMap, string projectFilename, string directoryName)
+        {
+            // If we haven't seen this directory before, find the files inside it
+            if (Directory.Exists(directoryName) && processedPhysicalDirectories.Add(directoryName))
+            {
+                AddGitIgnoreFromDirectory(directoryName);
 
-                        var physicalFiles =
-                            new DirectoryInfo(directoryName).GetFiles()
-                                .Where(
-                                    f => f.Attributes != FileAttributes.Hidden && f.Attributes != FileAttributes.System)
-                                .Where(f => !f.Name.EndsWith(".user", StringComparison.InvariantCultureIgnoreCase)
-                                    && !f.Name.EndsWith("proj", StringComparison.InvariantCultureIgnoreCase))
-                                .Select(f => f.FullName)
-                                .ToList();
+                var physicalFiles =
+                    new DirectoryInfo(directoryName).GetFiles()
+                        .Where(
+                            f => f.Attributes != FileAttributes.Hidden && f.Attributes != FileAttributes.System)
+                        .Where(f => !f.Name.EndsWith(".user", StringComparison.InvariantCultureIgnoreCase)
+                            && !f.Name.EndsWith("proj", StringComparison.InvariantCultureIgnoreCase))
+                        .Select(f => f.FullName)
+                        .ToList();
 
-                        foreach (var physicalFile in physicalFiles)
-                        {
-                            projectPhysicalFiles.Add(physicalFile);
-                            physicalFileProjectMap.Add(physicalFile, projectFilename);
-                        }
-                    }
+                foreach (var physicalFile in physicalFiles)
+                {
+                    projectPhysicalFiles.Add(physicalFile);
+                    physicalFileProjectMap.Add(physicalFile, projectFilename);
+                }
+
+                var physicalDirectories = new DirectoryInfo(directoryName).GetDirectories().Select(d => d.FullName).ToList();
+                foreach(var physicalDirectory in physicalDirectories)
+                {
+                    ProcessDirectoryForFiles(projectPhysicalFiles, processedPhysicalDirectories, physicalFileProjectMap, projectFilename, physicalDirectory);
                 }
             }
         }
