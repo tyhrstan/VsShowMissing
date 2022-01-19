@@ -1,28 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="36b8e40e-ceaa-4305-bdb7-1a68a0d84067" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="DavidGardiner" />
-        <DisplayName>Show Missing Files</DisplayName>
+        <Identity Id="VS2022.12af6940-b4ca-4cc5-852d-d0b06c9504e9" Version="|%CurrentProject%;GetBuildVersion|" Language="en-US" Publisher="David Gardiner" />
+        <DisplayName>Show Missing Files 2022</DisplayName>
         <Description xml:space="preserve">Find files references in project files that don't exist on disk, and optionally files that do exist on disk that aren't included in a project. 
 Runs on Build. Missing files are listed in Error List window.</Description>
         <MoreInfo>https://github.com/flcdrg/VsShowMissing</MoreInfo>
         <License>LICENSE.txt</License>
         <ReleaseNotes>https://github.com/flcdrg/VsShowMissing/releases</ReleaseNotes>
-        <Icon>Resources\BrokenlinktoFile_431_24.ico</Icon>
+        <Icon>BrokenlinktoFile_431_24.ico</Icon>
         <PreviewImage>VS2015 Screenshot.png</PreviewImage>
         <Tags>Missing, Warnings</Tags>
+        <Preview>true</Preview>
     </Metadata>
-    <Installation InstalledByMsi="false">
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[12.0,16.0)" />
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
     </Installation>
-    <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-        <Dependency Id="Microsoft.VisualStudio.MPF.12.0" DisplayName="Visual Studio MPF 12.0" d:Source="Installed" Version="[12.0]" />
-    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     </Assets>
-    <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
-    </Prerequisites>
 </PackageManifest>
