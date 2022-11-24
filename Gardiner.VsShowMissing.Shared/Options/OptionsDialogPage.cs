@@ -29,6 +29,7 @@ namespace Gardiner.VsShowMissing.Options
         {
             _ignorePhysicalFiles = IgnorePhysicalFilesDefault;
             UseGitIgnore = UseGitIgnoreDefault;
+            UseGlobalGitIgnore = UseGlobalGitIgnoreDefault;
             NotIncludedFiles = NotIncludedFilesDefault;
             FailBuildOnError = FailBuildOnErrorDefault;
         }

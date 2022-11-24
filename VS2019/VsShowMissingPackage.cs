@@ -54,6 +54,7 @@ namespace Gardiner.VsShowMissing
         private string _solutionDirectory;
         private List<Regex> _filters;
         private readonly Dictionary<string, IgnoreList> _gitignores;
+        private bool hasProjectGitIgnore;
         /// <summary>
         /// Initializes a new instance of the <see cref="VsShowMissingPackage"/> class.
         /// </summary>
@@ -185,7 +186,7 @@ namespace Gardiner.VsShowMissing
 
             _gitignores.Clear();
             AddGitIgnoreFromDirectory(_solutionDirectory);
-            AddGlobalGitIgnore();
+            AddGlobalGitIgnore(_solutionDirectory);
 
             _filters = new List<Regex>();
 
@@ -201,6 +202,12 @@ namespace Gardiner.VsShowMissing
             ThreadHelper.ThrowIfNotOnUIThread();
 
             Debug.WriteLine($"Project {proj.Name}");
+
+            if (!hasProjectGitIgnore)
+            {
+                Debug.WriteLine($"Project {proj.Name} doesn't include a .gitignore so findmissingfiles will stop searching.");
+                return;
+            }
 
             IDictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("Configuration", proj.ConfigurationManager.ActiveConfiguration.ConfigurationName);
@@ -426,16 +433,21 @@ namespace Gardiner.VsShowMissing
             if (Options.UseGitIgnore && File.Exists(gitIgnoreFile))
             {
                 _gitignores.Add(directoryName, new IgnoreList(gitIgnoreFile));
+                hasProjectGitIgnore = true;
             }
         }
 
-        private void AddGlobalGitIgnore()
+        private void AddGlobalGitIgnore(string solutionDirectoryName)
         {
             string directoryName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var gitIgnoreFile = Path.Combine(directoryName, ".gitignore");
             if (Options.UseGlobalGitIgnore && File.Exists(gitIgnoreFile))
             {
                 _gitignores.Add(directoryName, new IgnoreList(gitIgnoreFile));
+                if (_gitignores.ContainsKey(solutionDirectoryName))
+                {
+                    _gitignores[solutionDirectoryName].AddRules(gitIgnoreFile);
+                }
             }
         }
 
